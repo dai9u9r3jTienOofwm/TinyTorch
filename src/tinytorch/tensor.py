@@ -8,7 +8,7 @@ MB_TO_BYTES = 1024 * 1024  # Megabytes to bytes conversion
 
 class Tensor:
     def __init__(self,data):
-        self.data = np.ndarray(data, dtype = 'float32')
+        self.data = np.array(data, dtype = np.float32)
         
         self.shape = self.data.shape
         self.size = self.data.size
@@ -66,7 +66,7 @@ class Tensor:
         
         
         if len(self.shape) == 2 and len(other.shape) == 2:
-            result = np.ndarray((a.shape[0],b.shape[1]), dtype = 'float32')
+            result = np.array((a.shape[0],b.shape[1]), dtype = 'float32')
             
             for i in range(self.shape[0]):
                 result[i] = np.dot(a[i], b[:,i])
