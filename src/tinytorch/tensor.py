@@ -66,7 +66,7 @@ class Tensor:
         
         
         if len(self.shape) == 2 and len(other.shape) == 2:
-            result = np.array((a.shape[0],b.shape[1]), dtype = 'float32')
+            result = np.empty(shape = (a.shape[0],b.shape[1]), dtype = 'float32')
             
             for i in range(self.shape[0]):
                 for j in range(other.shape[1]):
