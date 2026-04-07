@@ -70,7 +70,7 @@ class Tensor:
             
             for i in range(self.shape[0]):
                 for j in range(other.shape[1]):
-                    result[i,j] = np.dot(a[i], b[:,j])
+                    result[i,j] = np.dot(a[i,:], b[:,j])
                 
                 
             return Tensor(result)  
