@@ -69,7 +69,8 @@ class Tensor:
             result = np.array((a.shape[0],b.shape[1]), dtype = 'float32')
             
             for i in range(self.shape[0]):
-                result[i] = np.dot(a[i], b[:,i])
+                for j in range(other.shape[1]):
+                    result[i,j] = np.dot(a[i], b[:,j])
                 
                 
             return Tensor(result)  
