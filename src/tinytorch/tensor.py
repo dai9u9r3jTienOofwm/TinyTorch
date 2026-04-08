@@ -66,7 +66,7 @@ class Tensor:
         
         
         if len(self.shape) == 2 and len(other.shape) == 2:
-            result = np.empty(shape = (a.shape[0],b.shape[1]), dtype = 'float32')
+            result = np.zeros(shape = (a.shape[0],b.shape[1]))
             
             for i in range(self.shape[0]):
                 for j in range(other.shape[1]):
@@ -78,38 +78,36 @@ class Tensor:
         
         else:
             return Tensor(np.matmul(a,b))  
-        
+      
     
-    def reshape(self, *shape):   
-        new_shape = list(shape)
-        
-        if isinstance(new_shape[0], (tuple,list)):
-            a = new_shape[0]
-            
-            row, col = a[0], a[1]
+    def reshape(self, *shape):           
+        if len(shape) == 1 and isinstance(shape, (tuple,list)):
+            axes = np.array(shape[0])
         else:
-            row, col = new_shape[0], new_shape[1]
-            
+            axes = np.array(shape)    
         
-        if row == -1:        
-            row = self.shape[0]
-        if col == -1:
-            col = self.shape[1]
-            
-        new_tensor =  Tensor(np.reshape(self.data,(row,col))) 
         
-        if new_tensor.size != self.size:
+        loc = np.where (axes == -1)
+        
+        if len(loc[0]) >= 2:
+            raise ValueError("can only specific one unknown dimension.")
+        elif len(loc[0]) == 1:
+            axes[loc[0][0]] = self.size // (np.prod(axes) * -1)
+            
+        if np.prod(axes) != self.size:
             raise ValueError(
                 'Total elements don\'t match\n'
                 f'Original tensor size {self.size}\n'
-                f'Input shape size {new_tensor.size}\n' 
-            )       
-            
+                f'Input shape size {np.prod(axes)}\n' 
+            )  
+         
+        new_tensor =  Tensor(np.reshape(self.data,tuple(axes))) 
+                       
         return new_tensor
     
     
     def transpose(self, dim0 = None, dim1 = None):
-        axes = list(self.shape)
+        axes = list(range(len(self.shape)))
         
         if dim0 == None and dim1 == None:
             axes[-2], axes[-1] = axes[-1], axes[-2]
@@ -126,3 +124,4 @@ class Tensor:
     
     def max(self, axis = None, keepdims = False):
         return np.max(self.data, axis = axis, keepdims = keepdims)            
+    
